@@ -112,11 +112,19 @@ pipeline {
 
     stage('Docker Build and Push') {
       steps {
-        // withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
-          sh 'printenv'
-          sh 'docker build -t alicerez/numeric-app:""$GIT_COMMIT"" .'
-          sh 'docker push alicerez/numeric-app:""$GIT_COMMIT""'
-        // }
+        script {
+          withEnv([
+            'PATH=/Users/alicereznickova/.rd/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin',
+            'DOCKER_HOST=unix:///Users/alicereznickova/.rd/docker.sock',
+            'DOCKER_CONTEXT=default'
+          ]) {
+            withDockerRegistry([credentialsId: "dockerhub", url: ""]) {
+              sh 'printenv'
+              sh 'docker build -t alicerez/numeric-app:""$GIT_COMMIT"" .'
+              sh 'docker push alicerez/numeric-app:""$GIT_COMMIT""'
+            }
+          }
+        }
       }
     }
 
