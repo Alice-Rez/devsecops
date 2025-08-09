@@ -64,12 +64,6 @@ pipeline {
       steps {
         sh "mvn test"
       }
-      post {
-        always {
-          junit 'target/surefire-reports/*.xml'
-          jacoco execPattern: 'target/jacoco.exec'
-        }
-      }
     }
 
     stage('Mutation Tests - PIT') {
@@ -78,9 +72,9 @@ pipeline {
       }
       post {
         always {
-          pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+            pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
         }
-      }
+    }
     }
 
     stage('SonarQube - SAST') {
@@ -98,21 +92,24 @@ pipeline {
       }
     }
 
-	// stage('Vulnerability Scan - Docker') {
- //      steps {
- //        parallel(
- //        	"Dependency Scan": {
- //        		sh "mvn dependency-check:check"
-	// 		},
-	// 		"Trivy Scan":{
-	// 			sh "bash trivy-docker-image-scan.sh"
-	// 		},
-	// 		"OPA Conftest":{
-	// 			sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
-	// 		}   	
- //      	)
- //      }
- //    }
+	stage('Vulnerability Scan - Docker') {
+    steps {
+      sh 'mvn dependency-check:check'
+    } 
+    }
+      // steps {
+      //   parallel(
+      //   	"Dependency Scan": {
+      //   		sh "mvn dependency-check:check"
+			// },
+			// "Trivy Scan":{
+			// 	sh "bash trivy-docker-image-scan.sh"
+			// },
+			// "OPA Conftest":{
+			// 	sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
+			// }   	
+      // 	)
+      // }
     
 
     stage('Docker Build and Push') {
@@ -270,26 +267,25 @@ pipeline {
 
   }
 
-  // post { 
-     //    always { 
-     //      junit 'target/surefire-reports/*.xml'
-     //      jacoco execPattern: 'target/jacoco.exec'
-     //      pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-     //      dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-     //      publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML Report', reportTitles: 'OWASP ZAP HTML Report'])
+  post { 
+        always { 
+          junit 'target/surefire-reports/*.xml'
+          jacoco execPattern: 'target/jacoco.exec'
+          dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+          // publishHTML([allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML Report', reportTitles: 'OWASP ZAP HTML Report'])
         
- 		  // //Use sendNotifications.groovy from shared library and provide current build result as parameter 
-     //      //sendNotification currentBuild.result
-     //    }
+ 		  //Use sendNotifications.groovy from shared library and provide current build result as parameter 
+          //sendNotification currentBuild.result
+        }
 
-    //     success {
-    //     	script {
-		//         /* Use slackNotifier.groovy from shared library and provide current build result as parameter */  
-		//         env.failedStage = "none"
-		//         env.emoji = ":white_check_mark: :tada: :thumbsup_all:" 
-		//         sendNotification currentBuild.result
-		//       }
-    //     }
+        // success {
+        // 	script {
+		    //     /* Use slackNotifier.groovy from shared library and provide current build result as parameter */  
+		    //     env.failedStage = "none"
+		    //     env.emoji = ":white_check_mark: :tada: :thumbsup_all:" 
+		    //     sendNotification currentBuild.result
+		    //   }
+        // }
 
 	  //   failure {
 	  //   	script {
@@ -300,6 +296,6 @@ pipeline {
 		//       sendNotification currentBuild.result
 		//     }	
 	  //   }
-    // }
+    }
 
 }
