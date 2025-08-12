@@ -9,7 +9,7 @@ echo "Scanning image: $dockerImageName"
 # Scan HIGH severity (no failure)
 docker run --rm -e SSL_CERT_DIR=/usr/local/share/ca-certificates \
       -v "$HOME/Zscaler-Root-CA.crt:/usr/local/share/ca-certificates/zscaler.crt:ro" \
-      -v "/root/.cache/" \
+      -v "$HOME/.trivy-cache:/root/.cache/" \
   aquasec/trivy:0.17.2 -q image \
   --exit-code 0 --severity HIGH --light \
   $dockerImageName
@@ -18,7 +18,7 @@ docker run --rm -e SSL_CERT_DIR=/usr/local/share/ca-certificates \
 # Scan CRITICAL severity (fail on detection)
 docker run --rm -e SSL_CERT_DIR=/usr/local/share/ca-certificates \
       -v "$HOME/Zscaler-Root-CA.crt:/usr/local/share/ca-certificates/zscaler.crt:ro" \
-      -v "/root/.cache/" \
+      -v "$HOME/.trivy-cache:/root/.cache/" \
   aquasec/trivy:0.17.2 -q image \
   --exit-code 1 --severity CRITICAL --light \
   $dockerImageName
