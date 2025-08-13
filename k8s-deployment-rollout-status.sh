@@ -2,7 +2,11 @@
 
 #k8s-deployment-rollout-status.sh
 
-sleep 60s
+sleep 20s
+
+echo "Context: $(kubectl config current-context)"
+
+echo ${deploymentName}
 
 if [[ $(kubectl -n default rollout status deploy ${deploymentName} --timeout 5s) != *"successfully rolled out"* ]]; 
 then     
