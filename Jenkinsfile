@@ -47,7 +47,7 @@ pipeline {
     containerName = "devsecops-container"
     serviceName = "devsecops-svc"
     imageName = "alicerez/numeric-app:${GIT_COMMIT}"
-    applicationURL="localhost:8090"
+    applicationURL="localhost"
     applicationURI="/increment/99"
   }
 
@@ -168,22 +168,22 @@ pipeline {
       }
     }
 
- //    stage('Integration Tests - DEV') {
- //      steps {
- //        script {
- //          try {
- //            withKubeConfig([credentialsId: 'kubeconfig']) {
- //              sh "bash integration-test.sh"
- //            }
- //          } catch (e) {
- //            withKubeConfig([credentialsId: 'kubeconfig']) {
- //              sh "kubectl -n default rollout undo deploy ${deploymentName}"
- //            }
- //            throw e
- //          }
- //        }
- //      }
- //    }
+    stage('Integration Tests - DEV') {
+      steps {
+        script {
+          try {
+            // withKubeConfig([credentialsId: 'kubeconfig']) {
+              sh "bash integration-test.sh"
+            // }
+          } catch (e) {
+            // withKubeConfig([credentialsId: 'kubeconfig']) {
+              sh "kubectl -n default rollout undo deploy ${deploymentName}"
+            // }
+            throw e
+          }
+        }
+      }
+    }
 
  //   stage('OWASP ZAP - DAST') {
  //      steps {
