@@ -47,7 +47,8 @@ pipeline {
     containerName = "devsecops-container"
     serviceName = "devsecops-svc"
     imageName = "alicerez/numeric-app:${GIT_COMMIT}"
-    applicationURL="localhost"
+    applicationURL="http://127.0.0.1"
+    applicationURLDocker="http://host.rancher-desktop.internal"
     applicationURI="/increment/99"
   }
 
@@ -185,13 +186,13 @@ pipeline {
       }
     }
 
- //   stage('OWASP ZAP - DAST') {
- //      steps {
- //        withKubeConfig([credentialsId: 'kubeconfig']) {
- //          sh 'bash zap.sh'
- //        }
- //      }
- //    }
+  //  stage('OWASP ZAP - DAST') {
+  //     steps {
+  //       // withKubeConfig([credentialsId: 'kubeconfig']) {
+  //         sh 'bash zap.sh'
+  //       }
+  //     // }
+  //   }
 
  //    stage('Prompte to PROD?') {
  //      steps {

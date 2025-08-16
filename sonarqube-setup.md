@@ -20,6 +20,8 @@ echo 'vm.max_map_count=262144' | sudo tee /etc/sysctl.d/99-sonarqube.conf
 cat /proc/sys/vm/max_map_count   # should print 262144
 ```
 
+- this need to be performed again on every Rancher Desktop restart
+
 ## 2. start SonarQube with Postgres
 
 - it needs postgres to store the data - otherwise it will never start
